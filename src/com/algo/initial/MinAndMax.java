@@ -15,6 +15,7 @@ public class MinAndMax {
 		for(int arr:array) {
 			if(arr<min) {   
 				min=arr;
+				
 			}
 			else if(arr>max) {
 				max=arr;
