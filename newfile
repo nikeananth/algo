@@ -1,0 +1,15 @@
+FROM python:3.9-slim AS build-env
+ADD . /app
+WORKDIR /app
+RUN pip install --upgrade pip
+RUN pip install -r ./requirements.txt
+
+FROM gcr.io/distroless/python3
+COPY --from=build-env /app /app
+COPY --from=build-env /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.7/site-packages
+WORKDIR /app
+ENV PYTHONPATH=/usr/local/lib/python3.7/site-packages
+
+EXPOSE 8080
+
+ENTRYPOINT ["python", "run_gunicorn.py","--bind=0.0.0.0:8000","--workers=1","--pythonpath=app", "manage:app","--timeout","300"]
